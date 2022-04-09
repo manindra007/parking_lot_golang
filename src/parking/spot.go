@@ -1,9 +1,14 @@
 package Parking
 
+import (
+	vehicle "parkinglot/src/Vehicle"
+)
+
 type Spot struct {
 	SpotId   int
 	SpotType ParkingType
 	IsFree   bool
+	Vehicle  vehicle.Vehicle
 }
 
 func CreateSpot() *Spot {

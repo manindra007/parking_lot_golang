@@ -1,5 +1,7 @@
 package Parking
 
+import vehicle "parkinglot/src/Vehicle"
+
 type Pakring struct {
 	parkingid int
 	address   string
@@ -16,7 +18,7 @@ func RemveFloor() {
 
 }
 
-func ParkVehicle() {
+func ParkVehicle(veh *vehicle.Vehicle) {
 
 }
 

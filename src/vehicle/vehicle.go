@@ -11,11 +11,11 @@ type Vehicle struct {
 	Owner person.Person
 }
 
-func createVehicle(regno string, vtype Vehicletype, color string, owner person.Person) *Vehicle {
+func createVehicle(regno string, vtype Vehicletype, color string, owner *person.Person) *Vehicle {
 	return &Vehicle{
 		RegNo: regno,
 		VType: vtype,
 		Color: color,
-		Owner: owner,
+		Owner: *owner,
 	}
 }

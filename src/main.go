@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	book "parkinglot/src/Booking"
+)
 
 func main() {
-	fmt.Println("hello world")
+	book.BookSlot()
 }
