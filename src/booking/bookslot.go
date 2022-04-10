@@ -12,5 +12,8 @@ func BookSlot() {
 	fmt.Println("here  1", *u1)
 	v1 := vehicle.CreateCar("UP53AP0001", "grey", u1)
 	fmt.Println("here 2", *v1)
-	park.ParkVehicle(v1)
+	err := park.ParkVehicle(v1)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }

@@ -1,6 +1,9 @@
 package Parking
 
-import vehicle "parkinglot/src/Vehicle"
+import (
+	"fmt"
+	vehicle "parkinglot/src/Vehicle"
+)
 
 type Pakring struct {
 	parkingid int
@@ -13,13 +16,24 @@ type Pakring struct {
 func AddFloor() {
 
 }
+func AddSpotToFloor() {
+}
 
 func RemveFloor() {
 
 }
 
-func ParkVehicle(veh *vehicle.Vehicle) {
-
+func ParkVehicle(veh *vehicle.Vehicle) error {
+	for _, Floor := range Floors {
+		sp, err := FindFirstEmptySpot(Floor.FloorId, veh.VType)
+		if err != nil {
+			fmt.Println(err.Error())
+			continue
+		}
+		ReserveSpot(sp)
+		return nil
+	}
+	return fmt.Errorf("park end")
 }
 
 func UnparkVehicle() {

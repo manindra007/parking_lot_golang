@@ -5,14 +5,18 @@ import (
 )
 
 type Spot struct {
-	SpotId   int
+	SpotId   string
 	SpotType ParkingType
 	IsFree   bool
 	Vehicle  vehicle.Vehicle
 }
 
-func CreateSpot() *Spot {
-	return &Spot{}
+func CreateSpot(spotid string, stype ParkingType) *Spot {
+	return &Spot{
+		SpotId:   spotid,
+		SpotType: stype,
+		IsFree:   true,
+	}
 }
 
 func ReserveSpot(spot *Spot) {

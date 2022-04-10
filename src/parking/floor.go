@@ -6,30 +6,60 @@ import (
 )
 
 type FloorDetail struct {
-	FloorId      int
+	FloorId      string
 	FloorNumber  int
 	CarSpotList  []Spot
 	BykeSpotList []Spot
 }
 
-var Floor FloorDetail
+var Floors []FloorDetail
 
-func AddSpot(spottype Vehicle.Vehicletype) {
-	spot := CreateSpot()
-	if spottype == Vehicle.Car {
-		Floor.CarSpotList = append(Floor.CarSpotList, *spot)
-	} else if spottype == Vehicle.Byke {
-		Floor.BykeSpotList = append(Floor.BykeSpotList, *spot)
+func CreateFloor(parkingId string) {
+	Floors = append(Floors, FloorDetail{
+		FloorId:     parkingId + string(len(Floors)+1),
+		FloorNumber: len(Floors) + 1,
+	})
+}
+
+func AddSpot(floorid string, spottype Vehicle.Vehicletype) {
+	for i, floor := range Floors {
+		if floor.FloorId != floorid {
+			continue
+		}
+		if spottype == Vehicle.Car {
+			spot := CreateSpot(floorid+"S"+string(len(floor.CarSpotList)+1), ParkingType(Car))
+			Floors[i].CarSpotList = append(Floors[i].CarSpotList, *spot)
+			break
+		} else if spottype == Vehicle.Byke {
+			spot := CreateSpot(floorid+"S"+string(len(floor.BykeSpotList)+1), ParkingType(Byke))
+			Floors[i].BykeSpotList = append(Floors[i].BykeSpotList, *spot)
+			break
+		}
 	}
 }
 
-func RemoveSpotById(spotid int, spottype Vehicle.Vehicletype) {
-	if spottype == Vehicle.Byke {
-		removespot(spotid, Floor.BykeSpotList)
+func RemoveSpotById(spotid string, spottype Vehicle.Vehicletype) {
+	for i, floor := range Floors {
+		if floor.FloorId != spotid {
+			continue
+		}
+		if spottype == Vehicle.Byke {
+			if err := removespot(spotid, Floors[i].BykeSpotList); err != nil {
+				continue
+			} else {
+				break
+			}
+		} else if spottype == Vehicle.Car {
+			if err := removespot(spotid, Floors[i].CarSpotList); err != nil {
+				continue
+			} else {
+				break
+			}
+		}
 	}
 }
 
-func removespot(spotid int, spots []Spot) error {
+func removespot(spotid string, spots []Spot) error {
 	for i, j := range spots {
 		if spotid == j.SpotId {
 			spots = append(spots[0:i-1], spots[i+1:]...)
@@ -38,16 +68,22 @@ func removespot(spotid int, spots []Spot) error {
 	}
 	return fmt.Errorf("Spot not found")
 }
-func FindFirstEmptySpot(spottype Vehicle.Vehicletype) (*Spot, error) {
+func FindFirstEmptySpot(floorid string, spottype Vehicle.Vehicletype) (*Spot, error) {
 	var spot *Spot
 	var err error
+	var floor FloorDetail
+	for _, f := range Floors {
+		if f.FloorId == floorid {
+			floor = f
+		}
+	}
 	if spottype == Vehicle.Car {
-		spot, err = findspot(Floor.CarSpotList)
+		spot, err = findspot(floor.CarSpotList)
 		if err != nil {
 			return spot, err
 		}
 	} else {
-		spot, err = findspot(Floor.BykeSpotList)
+		spot, err = findspot(floor.BykeSpotList)
 		if err != nil {
 			return spot, err
 		}
@@ -61,5 +97,5 @@ func findspot(spots []Spot) (*Spot, error) {
 			return &spot, nil
 		}
 	}
-	return nil, fmt.Errorf("no spot found")
+	return nil, fmt.Errorf("Spot not found")
 }
