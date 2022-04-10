@@ -5,18 +5,28 @@ import (
 	vehicle "parkinglot/src/Vehicle"
 )
 
-type Pakring struct {
-	parkingid int
-	address   string
+type Parking struct {
+	Parkingid string
+	Address   string
 	// enterance Enterance
 	// exit Exit
 	Floors []FloorDetail
 }
 
-func AddFloor() {
+var ParkingLot Parking
 
+func CreateParkingLot() {
+	ParkingLot.Parkingid = "abc"
 }
-func AddSpotToFloor() {
+func GetParking() *Parking {
+	return &ParkingLot
+}
+
+func (p Parking) AddFloorInParking() {
+	ParkingLot.Floors = append(ParkingLot.Floors, *CreateFloor(ParkingLot.Parkingid + "F"))
+}
+func AddSpotToFloor(index int) {
+	AddSpot(&ParkingLot.Floors[index], vehicle.Car)
 }
 
 func RemveFloor() {
@@ -24,8 +34,8 @@ func RemveFloor() {
 }
 
 func ParkVehicle(veh *vehicle.Vehicle) error {
-	for _, Floor := range Floors {
-		sp, err := FindFirstEmptySpot(Floor.FloorId, veh.VType)
+	for _, Floor := range ParkingLot.Floors {
+		sp, err := FindFirstEmptySpot(Floor, veh.VType)
 		if err != nil {
 			fmt.Println(err.Error())
 			continue
